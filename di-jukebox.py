@@ -9,7 +9,8 @@ if __name__ == '__main__':
 
     import time
 
-    types = {'1': "Figure", '2': "Play Set", '3': "Game Disc", '4': "Power Disc, Ability", '5': "Power Disc, Toy",
+    types = {'1': "Figure", '2': "Play Set", '3': "Game Disc",
+             '4': "Power Disc, Ability", '5': "Power Disc, Toy",
              '6': "Power Disc, Customization"}
     current_tags = set([])
     data = yaml.load(open('data.yaml', 'r'), Loader=yaml.FullLoader)
@@ -56,12 +57,11 @@ if __name__ == '__main__':
         for new in new_tags:
             x = next(item for item in data['tags'] if new == item['id'])
             if x['yt']:
-                print("YouTube entry", x['yt'])
+                print("LOADING VIDEO " + str(x['yt']) + " . . . ")
                 url = pafy.new(x['yt']).getbest().url
-                print("url", url)
-                print("setting up media")
+                print("setting media url:" + str(url))
                 player.set_media(vlc_instance.media_new(url))
-                print("media set, lets play")
+                print("lets play")
                 player.play()
             else:
                 print("stopping")
