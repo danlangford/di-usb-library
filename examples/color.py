@@ -26,22 +26,22 @@ def setColors(base_to_tag):
         if b in base_to_tag:
             people = base_to_tag[b]
             if SPIDERMAN in people:
-                base.setColor(b, *RED)
+                base.set_color(b, *RED)
             elif IRON_MAN in people:
-                base.setColor(b, *YELLOW)
+                base.set_color(b, *YELLOW)
             elif RAPUNZEL in people:
-                base.setColor(b, *PINK)
+                base.set_color(b, *PINK)
             elif LUKE in people:
-                base.setColor(b, *LIGHT_BLUE)
+                base.set_color(b, *LIGHT_BLUE)
             elif JACK_SPARROW in people:
-                base.setColor(b, *PURPLE)
+                base.set_color(b, *PURPLE)
             else:
-                base.setColor(b, *GLOW)
+                base.set_color(b, *GLOW)
         else:
-            base.setColor(b, *OFF)
+            base.set_color(b, *OFF)
 
 def updateColors():
-    base.getAllTags(setColors)
+    base.get_all_tags(setColors)
 
 base.onTagsChanged = updateColors
 
