@@ -12,7 +12,7 @@ if __name__ == '__main__':
     types = {'1': "Figure", '2': "Play Set", '3': "Game Disc", '4': "Power Disc, Ability", '5': "Power Disc, Toy",
              '6': "Power Disc, Customization"}
     current_tags = set([])
-    data = yaml.load(open('../data.yaml', 'r'), Loader=yaml.FullLoader)
+    data = yaml.load(open('data.yaml', 'r'), Loader=yaml.FullLoader)
     vlc_instance = vlc.Instance("--aout=alsa")
     player = vlc_instance.media_player_new()
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
         global vlc_instance
         global player
 
-        data = yaml.load(open('../data.yaml', 'r'), Loader=yaml.FullLoader)
+        data = yaml.load(open('data.yaml', 'r'), Loader=yaml.FullLoader)
 
         base.flash_color(1, 200, 200, 200)
 
