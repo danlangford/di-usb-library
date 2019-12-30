@@ -19,9 +19,8 @@ class InfinityComms(threading.Thread):
         self.observers = []
 
     def init_base(self):
-        device = hid.device()
-        device.open(0x0e6f, 0x0129)
-        device.set_nonblocking(0)
+        device = hid.Device(0x0e6f, 0x0129)
+        device.nonblocking = False
         return device
 
     def run(self):
@@ -29,7 +28,7 @@ class InfinityComms(threading.Thread):
             line = self.device.read(32, 3000)
             if not len(line):
                 continue
-            fields = [c for c in line]
+            fields = [ord(c) for c in line]
             if fields[0] == 0xaa:
                 length = fields[1]
                 message_id = fields[2]
@@ -62,8 +61,7 @@ class InfinityComms(threading.Thread):
         message_id, message = self.construct_message(command, data)
         result = Deferred()
         self.pending_requests[message_id] = result
-        print("message")
-        print(message)
+        print("message"+str(message))
         self.device.write(message)
         return Promise(result)
 
@@ -78,7 +76,7 @@ class InfinityComms(threading.Thread):
             message[index] = byte
             checksum = checksum + byte
         message[len(command_bytes)] = checksum & 0xff
-        return (message_id, message)
+        return (message_id, "".join(map(chr,message)))
 
 
 class Deferred(object):
@@ -231,6 +229,7 @@ if __name__ == '__main__':
             Media.get_mrl()
             player.set_media(Media)
             player.play()
+            player.set_fullscreen(True)
 
 
     base.onTagsChanged = tags_changed

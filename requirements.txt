@@ -1,3 +1,7 @@
+# hid requires external dependency hidapi
+# see https://github.com/apmorton/pyhidapi
+hid
+
 pyyaml
 pafy
 python-vlc
