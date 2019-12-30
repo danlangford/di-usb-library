@@ -1,14 +1,12 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import threading
 from collections import defaultdict
 import hid
+import tagids
+import tagurls
 import os
 import yaml
 import pafy
 import vlc
-from six.moves import map
-from six.moves import input
 
 
 class InfinityComms(threading.Thread):
@@ -53,7 +51,7 @@ class InfinityComms(threading.Thread):
             obs.tagsUpdated()
 
     def unknown_message(self, fields):
-        print(("UNKNOWN MESSAGE RECEIVED ", fields))
+        print("UNKNOWN MESSAGE RECEIVED ", fields)
 
     def next_message_number(self):
         self.message_number = (self.message_number + 1) % 256
@@ -63,7 +61,7 @@ class InfinityComms(threading.Thread):
         message_id, message = self.construct_message(command, data)
         result = Deferred()
         self.pending_requests[message_id] = result
-        print(("message"+str(message)))
+        print("message"+str(message))
         self.device.write(message)
         return Promise(result)
 
@@ -111,7 +109,7 @@ class Promise(object):
                 if failure:
                     failure(ex)
                 else:
-                    print((ex.message))
+                    print(ex.message)
         threading.Thread(target=task).start()
         return self
 
@@ -184,7 +182,7 @@ if __name__ == '__main__':
     import time
     types = {'1': "Figure", '2': "Play Set", '3': "Game Disc", '4':"Power Disc, Ability", '5': "Power Disc, Toy", '6': "Power Disc, Customization"}
     current_tags = set([])
-    data = yaml.load(open('data.yaml', 'r'), Loader=yaml.FullLoader)
+    data = yaml.load(file('data.yaml', 'r'), Loader=yaml.FullLoader)
     Instance = vlc.Instance()
     player = Instance.media_player_new()
 
@@ -204,23 +202,23 @@ if __name__ == '__main__':
         global Instance
         global player
 
-        data = yaml.load(open('data.yaml', 'r'), Loader=yaml.FullLoader)
+        data = yaml.load(file('data.yaml', 'r'), Loader=yaml.FullLoader)
 
         base.flashColor(1, 200, 200, 200)
 
         #print(positions)
         all_tags = set('_'.join(map(str,tag)) for tags in positions.values() for tag in tags)
         #print("current_tags", current_tags)
-        print(("all_tags", all_tags))
+        print("all_tags", all_tags)
         for t in all_tags:
             if not any(t == x['id'] for x in data['tags']):
-                desc = input("Describe that:")
-                type = types[input(str(types))]
+                desc = raw_input("Describe that:")
+                type = types[raw_input(str(types))]
                 data['tags'].append(dict({'id': t, 'desc': desc, 'type':type}))
-                yaml.dump(data, open('data.yaml', 'w'))
+                yaml.dump(data, file('data.yaml', 'w'))
 
         new_tags = all_tags - current_tags
-        print(("new_tags",new_tags))
+        print("new_tags",new_tags)
         current_tags = all_tags
         for new in new_tags:
         #     os.system("open \""+tagurls.LISTING[tagids.LISTING[new]]+"\"")
